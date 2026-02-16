@@ -2,8 +2,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from .models import DeliveryProfile
-from .serializers import DeliveryProfileSerializer
+from .models import DeliveryProfile, DeliveryRating 
+from .serializers import DeliveryProfileSerializer, DeliveryRatingSerializer 
 from orders.models import Order
 from orders.serializers import OrderSerializer
 
@@ -26,7 +26,6 @@ class AvailableOrdersView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Logic to return orders ready for pickup and nearby (mock proximity)
         return Order.objects.filter(status='PREPARING', delivery_partner__isnull=True)
 
 class AcceptOrderView(APIView):
@@ -35,6 +34,14 @@ class AcceptOrderView(APIView):
     def post(self, request, order_id):
         order = get_object_or_404(Order, id=order_id, delivery_partner__isnull=True)
         order.delivery_partner = request.user
-        order.status = 'PICKED_UP' # Simplified flow
+        order.status = 'PICKED_UP' 
         order.save()
         return Response(OrderSerializer(order).data)
+
+class RatePartnerView(generics.CreateAPIView):
+    queryset = DeliveryRating.objects.all()
+    serializer_class = DeliveryRatingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(customer=self.request.user)
