@@ -1,11 +1,12 @@
 from django.urls import path
 from .views import (
     RestaurantCreateView, RestaurantDetailView, RestaurantListView,
-    MenuDetailView, MenuItemCreateView, MenuItemUpdateDeleteView
+    MenuDetailView, MenuItemCreateView, MenuItemUpdateDeleteView,RestaurantRegistrationView
 )
 
 urlpatterns = [
-    path('register/', RestaurantCreateView.as_view(), name='restaurant-register'),
+    path('register/', RestaurantRegistrationView.as_view(), name='restaurant-register'),
+    path('create/', RestaurantCreateView.as_view(), name='restaurant-register'),
     path('manage/', RestaurantDetailView.as_view(), name='restaurant-manage'),
     path('list/', RestaurantListView.as_view(), name='restaurant-list'),
     path('<int:restaurant_id>/menu/', MenuDetailView.as_view(), name='restaurant-menu'),
