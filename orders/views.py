@@ -96,12 +96,6 @@ class OrderUpdateView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
 
-# ======================================================
-# Delivery Partner Updates Order Status API
-# ======================================================
-
-from delivery.models import DeliveryProfile
-
 class DeliveryPartnerUpdateStatusAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -109,47 +103,29 @@ class DeliveryPartnerUpdateStatusAPIView(APIView):
 
         user = request.user
 
-        # ✅ Only Delivery Partner role allowed
         if user.role != "DELIVERY":
             return Response(
                 {"error": "Only delivery partners can update status"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # ✅ Order exists?
-        try:
-            order = Order.objects.get(id=order_id)
-        except Order.DoesNotExist:
-            return Response(
-                {"error": "Order not found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+        order = get_object_or_404(Order, id=order_id)
 
-        # ✅ Must be assigned partner
         if order.delivery_partner != user:
             return Response(
                 {"error": "This order is not assigned to you"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # ✅ Update status
         serializer = DeliveryPartnerStatusUpdateSerializer(
-            order,
-            data=request.data,
-            partial=True
+            order, data=request.data, partial=True
         )
 
         if serializer.is_valid():
             serializer.save()
-
             return Response(
-                {
-                    "message": "Order status updated successfully",
-                    "order_id": order.id,
-                    "new_status": order.status
-                },
-                status=status.HTTP_200_OK
+                {"message": "Order status updated successfully",
+                 "new_status": order.status}
             )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(serializer.errors, status=400)

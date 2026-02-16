@@ -35,7 +35,6 @@ class OrderSerializer(serializers.ModelSerializer):
 class PlaceOrderSerializer(serializers.Serializer):
     delivery_address = serializers.CharField()
 
-# Delivery Partner Status Update
 class DeliveryPartnerStatusUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -51,3 +50,5 @@ class DeliveryPartnerStatusUpdateSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+
