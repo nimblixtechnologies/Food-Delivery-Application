@@ -1,9 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, BasePermission, AllowAny
 from .models import Restaurant, Menu, MenuItem
-from .serializers import RestaurantSerializer, CreateRestaurantSerializer, MenuSerializer, CreateMenuItemSerializer
+from .serializers import RestaurantSerializer, RestaurantRegistrationSerializer, CreateRestaurantSerializer, MenuSerializer, CreateMenuItemSerializer
 from django.shortcuts import get_object_or_404
 
 class IsRestaurantOwner(BasePermission):
@@ -56,3 +56,7 @@ class MenuItemUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         restaurant = get_object_or_404(Restaurant, user=self.request.user)
         menu = get_object_or_404(Menu, restaurant=restaurant)
         return MenuItem.objects.filter(menu=menu)
+
+class RestaurantRegistrationView(generics.CreateAPIView):
+    serializer_class = RestaurantRegistrationSerializer
+    permission_classes = [AllowAny]
