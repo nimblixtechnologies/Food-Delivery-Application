@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+<<<<<<< HEAD
+=======
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +27,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+<<<<<<< HEAD
+SECRET_KEY = 'django-insecure-xmq6y5rv@ljg#y6gkp**w3k5ir^df8ox-k%7@7ov3t%tqigj)9'
+=======
 SECRET_KEY = 'django-insecure-gx&qvyc&uo14i@())l$mutip3-y+q5q)hkbzkpovliy4s-qaqd'
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
+    'flasheatsapps.users',
+    'flasheatsapps.orders',
+    'flasheatsapps.complaints',
+    'flasheatsapps.restaurants',
+    'rest_framework',
+=======
     'rest_framework',
     'corsheaders',
     'core',
@@ -48,12 +62,16 @@ INSTALLED_APPS = [
     'restaurants',
     'orders',
     'delivery',
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+<<<<<<< HEAD
+=======
     'corsheaders.middleware.CorsMiddleware',
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -86,12 +104,17 @@ WSGI_APPLICATION = 'food_delivery.wsgi.application'
 
 DATABASES = {
     'default': {
+<<<<<<< HEAD
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+=======
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME', 'food_delivery_db'),
         'USER': os.getenv('DB_USER', 'root'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'password'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', '3306'),
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
     }
 }
 
@@ -120,6 +143,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+<<<<<<< HEAD
+TIME_ZONE = 'Asia/Kolkata'
+
+USE_I18N = True
+
+=======
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -136,6 +165,7 @@ REST_FRAMEWORK = {
     ]
 }
 
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
 USE_TZ = True
 
 
@@ -143,3 +173,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+<<<<<<< HEAD
+LOGIN_REDIRECT_URL = '/api/orders/'
+LOGOUT_REDIRECT_URL = '/api-auth/login/'
+
+
+=======
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
