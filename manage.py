@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
+import os
+import sys
+
+def main():
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'restaurant_api.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError:
+        raise
+    execute_from_command_line(sys.argv)
+
+=======
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
@@ -18,5 +31,6 @@ def main():
     execute_from_command_line(sys.argv)
 
 
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
 if __name__ == '__main__':
     main()
