@@ -82,16 +82,16 @@ WSGI_APPLICATION = 'food_delivery.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'food_delivery_db'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'password'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3') if os.getenv('DB_ENGINE', '').startswith('sqlite') else os.getenv('DB_NAME', 'food_delivery_db'),
+        'USER': os.getenv('DB_USER', 'root') if not os.getenv('DB_ENGINE', '').startswith('sqlite') else '',
+        'PASSWORD': os.getenv('DB_PASSWORD', 'password') if not os.getenv('DB_ENGINE', '').startswith('sqlite') else '',
+        'HOST': os.getenv('DB_HOST', '127.0.0.1') if not os.getenv('DB_ENGINE', '').startswith('sqlite') else '',
+        'PORT': os.getenv('DB_PORT', '3306') if not os.getenv('DB_ENGINE', '').startswith('sqlite') else '',
     }
 }
 
@@ -143,3 +143,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# Authentication Configuration
+JWT_SECRET = os.getenv('JWT_SECRET', 'change_me')
+JWT_ALG = os.getenv('JWT_ALG', 'HS256')
+JWT_EXPIRES_MINUTES = int(os.getenv('JWT_EXPIRES_MINUTES', '60'))
+
+OTP_SECRET = os.getenv('OTP_SECRET', 'change_me')
+OTP_TTL_SECONDS = int(os.getenv('OTP_TTL_SECONDS', '300'))
+OTP_DEBUG_RETURN = os.getenv('OTP_DEBUG_RETURN', 'True').lower() == 'true'
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', None)
