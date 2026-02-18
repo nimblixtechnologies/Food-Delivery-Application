@@ -1,20 +1,38 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, BasePermission
-from .models import Restaurant, Menu, MenuItem
-from .serializers import RestaurantSerializer, CreateRestaurantSerializer, MenuSerializer, CreateMenuItemSerializer
 from django.shortcuts import get_object_or_404
 
+from .models import Restaurant, Menu, MenuItem, Category
+from .serializers import (
+    RestaurantSerializer,
+    CreateRestaurantSerializer,
+    MenuSerializer,
+    CreateMenuItemSerializer,
+    CategorySerializer,
+    MenuItemSerializer
+)
+
+# -------------------------------
+# Permissions
+# -------------------------------
 class IsRestaurantOwner(BasePermission):
+    """
+    Only allow users with role 'RESTAURANT' to perform certain actions
+    """
     def has_permission(self, request, view):
         return request.user.role == 'RESTAURANT'
 
+# -------------------------------
+# Restaurant APIs
+# -------------------------------
 class RestaurantCreateView(generics.CreateAPIView):
     serializer_class = CreateRestaurantSerializer
     permission_classes = [IsAuthenticated, IsRestaurantOwner]
 
     def perform_create(self, serializer):
+        # Create restaurant and automatically create a menu
         restaurant = serializer.save(user=self.request.user)
         Menu.objects.create(restaurant=restaurant)
 
@@ -30,6 +48,9 @@ class RestaurantListView(generics.ListAPIView):
     serializer_class = RestaurantSerializer
     permission_classes = [permissions.AllowAny]
 
+# -------------------------------
+# Menu APIs
+# -------------------------------
 class MenuDetailView(generics.RetrieveAPIView):
     serializer_class = MenuSerializer
     permission_classes = [permissions.AllowAny]
@@ -56,3 +77,24 @@ class MenuItemUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         restaurant = get_object_or_404(Restaurant, user=self.request.user)
         menu = get_object_or_404(Menu, restaurant=restaurant)
         return MenuItem.objects.filter(menu=menu)
+
+# -------------------------------
+# ViewSets for DRF Routers
+# -------------------------------
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class MenuItemViewSet(viewsets.ModelViewSet):
+    """
+    DRF ViewSet for Menu Items API
+    """
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+
+class RestaurantViewSet(viewsets.ModelViewSet):
+    """
+    DRF ViewSet for Restaurants API
+    """
+    queryset = Restaurant.objects.filter(is_approved=True)
+    serializer_class = RestaurantSerializer
