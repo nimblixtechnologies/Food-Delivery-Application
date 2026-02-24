@@ -3,7 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import Cart, CartItem, Order, OrderItem
-from .serializers import CartSerializer, CartItemSerializer, OrderSerializer, PlaceOrderSerializer
+from .serializers import (
+    CartSerializer,
+    CartItemSerializer,
+    OrderSerializer,
+    PlaceOrderSerializer,
+    DeliveryPartnerStatusUpdateSerializer
+)
 from restaurants.models import MenuItem
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
@@ -89,3 +95,37 @@ class OrderUpdateView(generics.UpdateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
+
+class DeliveryPartnerUpdateStatusAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, order_id):
+
+        user = request.user
+
+        if user.role != "DELIVERY":
+            return Response(
+                {"error": "Only delivery partners can update status"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        order = get_object_or_404(Order, id=order_id)
+
+        if order.delivery_partner != user:
+            return Response(
+                {"error": "This order is not assigned to you"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = DeliveryPartnerStatusUpdateSerializer(
+            order, data=request.data, partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Order status updated successfully",
+                 "new_status": order.status}
+            )
+
+        return Response(serializer.errors, status=400)

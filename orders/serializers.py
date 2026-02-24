@@ -34,3 +34,21 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class PlaceOrderSerializer(serializers.Serializer):
     delivery_address = serializers.CharField()
+
+class DeliveryPartnerStatusUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = ["status"]
+
+    def validate_status(self, value):
+        allowed = ["PICKED_UP", "DELIVERED"]
+
+        if value not in allowed:
+            raise serializers.ValidationError(
+                "Delivery partner can update status only to PICKED_UP or DELIVERED."
+            )
+
+        return value
+
+
