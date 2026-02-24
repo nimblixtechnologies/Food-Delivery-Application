@@ -19,8 +19,19 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
+    path('api/orders/', include('flasheatsapps.orders.urls')),
+    path('api/complaints/', include('flasheatsapps.complaints.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+]
+
+
+
+=======
     path('api/users/', include('users.urls')),
     path('api/restaurants/', include('restaurants.urls')),
     path('api/orders/', include('orders.urls')),
     path('api/delivery/', include('delivery.urls')),
 ]
+>>>>>>> 071a308dff2ead767dd9631a6a22f57353ed16d5
