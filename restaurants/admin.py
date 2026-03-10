@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Restaurant, Menu, MenuItem
+from .models import Restaurant, Menu, MenuItem, Category
+
+admin.site.register(Category)
 
 class MenuItemInline(admin.TabularInline):
     model = MenuItem
